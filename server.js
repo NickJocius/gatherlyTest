@@ -1,8 +1,25 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const connectDB = require('./config/db');
+const cors = require("cors");
+const fs = require('fs');
+const path = require('path');
 
-require('dotenv').config({path: './config/config.env'});
+require('dotenv').config({ path: './config/config.env' });
 
+// app
 const app = express();
+
+// db
+connectDB();
+
+// middleware
+app.use(express.json());
+app.use(cors());
+
+
+//routes middleware
+fs.readdirSync('./routes').map((r) => app.use("/api", require('./routes/' + r)));
 
 const PORT = process.env.PORT || 5000;
 
