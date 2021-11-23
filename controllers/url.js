@@ -4,28 +4,28 @@ const { nanoid } = require('nanoid');
 
 exports.create = async (req, res) => {
     const{origUrl} = req.body;
-
-    if (utils.validateUrl(origUrl)) {
+    const valid = utils.validateUrl(origUrl);
+    
         try {
             const urlExists = await Url.exists({ origUrl: origUrl });
-            if (!urlExists) {
+            if (!urlExists && valid) {
                 const shortendUrl = nanoid(5);
                 const newUrl = await new Url({
                     origUrl,
                     shortUrl: shortendUrl,
                 }).save();
                 res.status(201).json({ success: true, newUrl })
-            } else {
+            } else if(urlExists && valid) {
                 const existing = await Url.findOne({ origUrl: origUrl }).exec();
                 res.json({ success: false, existing });
+            } else {
+                res.json({ err: 'invalid' });
             }
         } catch (error) {
             res.status(400).json({
             error: error.message,
         });
         }
-    }
-    
 }
 
 exports.read = async (req, res) => {
