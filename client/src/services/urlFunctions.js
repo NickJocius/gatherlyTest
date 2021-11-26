@@ -5,5 +5,6 @@ export const shortenUrl = async (origUrl) => {
 }
 
 export const getUrl = async (shortUrl) => {
-    return axios.get(`${process.env.REACT_APP_API}/url`, {shortUrl: shortUrl});
+    let modUrl = shortUrl.replace('https://', '');
+    return axios.get(`${process.env.REACT_APP_API}/url/${modUrl}`);
 }

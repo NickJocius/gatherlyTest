@@ -11,10 +11,15 @@ const useStyles = makeStyles((theme) => ({
     center: {
         display: 'flex',
         justifyContent: 'center'
+    },
+    title: {
+        fontWeight: theme.typography.fontWeightBold,
+        fontSize: '2rem'
+
     }
 }));
 
-const Form = ({title, action, setNewUrl}) => {
+const Form = ({title, action, setNewUrl, newUrl}) => {
     const classes = useStyles();
     const [url, setUrl] = useState("");
     const [valid, setValid] = useState(true);
@@ -22,7 +27,7 @@ const Form = ({title, action, setNewUrl}) => {
     const handleChange = (e) => {
         e.preventDefault();
         setValid(true);
-        setUrl(e.target.value.toLowerCase());
+        setUrl(e.target.value);
     }
 
     const handleSubmit = (e) => {
@@ -30,7 +35,9 @@ const Form = ({title, action, setNewUrl}) => {
         if (action === "Shorten") {
             shortenUrl(url).then((res) => {
                 if (res.data.err !== 'invalid') {
-                    setNewUrl(res.data);
+                
+                    
+                    setNewUrl([{...res.data}]);
                 } else {
                     setValid(false);
                 }
@@ -39,18 +46,17 @@ const Form = ({title, action, setNewUrl}) => {
             })
         } else {
             getUrl(url).then((res) => {
-            setNewUrl(res.data);
-            }).catch((err) => {
-                console.log(err.error);
-            })
+                window.open(`${res.data.longUrl.origUrl}`);
+                
+            }).catch((err) => console.log(err))
         }
-        
+        setUrl('');
     }
 
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} className={classes.center}>
-                <Typography variant="h3" gutterBottom align="center">{title}</Typography>
+                <Typography gutterBottom align="center" className={classes.title}>{title}</Typography>
             </Grid>
             <Grid item xs={12} className={classes.center}>
                 <TextField

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const TabBox = ({setNewUrl}) => {
+const TabBox = ({setNewUrl, newUrl}) => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
@@ -69,10 +69,10 @@ const TabBox = ({setNewUrl}) => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-              <Form title="Shorten Url" action="Shorten" setNewUrl={setNewUrl}/>
+              <Form title="Shorten Url" action="Shorten" setNewUrl={setNewUrl} newUrl={newUrl}/>
       </TabPanel>
       <TabPanel value={value}  index={1}>
-        <Form title="Get Url" action="Get" setNewUrl={setNewUrl}/>
+        <Form title="Get Url" action="Get" setNewUrl={setNewUrl} newUrl={newUrl}/>
       </TabPanel>
     </div>
   );

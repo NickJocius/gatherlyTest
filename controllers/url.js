@@ -12,7 +12,7 @@ exports.create = async (req, res) => {
                 const shortendUrl = nanoid(5);
                 const newUrl = await new Url({
                     origUrl,
-                    shortUrl: shortendUrl,
+                    shortUrl: `https://${shortendUrl}`,
                 }).save();
                 res.status(201).json({ success: true, newUrl })
             } else if(urlExists && valid) {
@@ -29,10 +29,16 @@ exports.create = async (req, res) => {
 }
 
 exports.read = async (req, res) => {
-    const { shortUrl } = req.body;
+    const shortUrl = req.params.shortUrl;
+    const modUrl = `https://${shortUrl}`;
+    
     try {
-        const longUrl = await Url.findOne({ shortUrl: shortUrl }).exec();
-        res.status(200).json({ success: true, longUrl });
+        const longUrl = await Url.findOne({ shortUrl: modUrl }).exec();
+        if (longUrl) {
+            res.status(200).json({ success: true, longUrl });
+        } else {
+            return res.send({res: "not found"});
+        }
     } catch (error) {
         res.status(400).json({
             error: error.message,

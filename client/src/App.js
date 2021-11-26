@@ -11,14 +11,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function App() {
+const App =()=> {
   const classes = useStyles();
-  const [newUrl, setNewUrl] = useState({});
+  const [newUrl, setNewUrl] = useState([]);
   return (
     <div className="App">
       <Container maxWidth="xl" className={classes.root}>
-        <TabBox setNewUrl={setNewUrl} />
-        <DataBox newUrl={newUrl}/>
+        <TabBox setNewUrl={setNewUrl} newUrl={newUrl} />
+        {newUrl && (
+          newUrl.map((u, i) => (
+            <DataBox newUrl={u} key={u._id}/>
+          ))
+        )}
+        
       </Container>
     </div>
   );
